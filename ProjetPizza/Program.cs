@@ -1,11 +1,18 @@
-﻿// See https://aka.ms/new-console-template for more information
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-Console.WriteLine("Hello, World!");
-var pizza1 = new Pizza("4 fromages", 11.5f, true);
-pizza1.Afficher();
+var listePizzas = new List<Pizza>()
+{
+    new Pizza("4 fromages", 11.5f, true),
+    new Pizza("margherita", 8f, true),
+    new Pizza("indienne", 12.5f, false),
+    new Pizza("calzone", 11.5f, true),
+    new Pizza("mexicaine", 13.5f, false)
+};
 
+foreach (var pizza in listePizzas) {
+    pizza.Afficher(); 
+};
 
 class Pizza
 {
@@ -19,9 +26,18 @@ class Pizza
         this.vegetarienne = vegetarienne;
     }
 
+    private static string FormaterNomPizza(string s)
+    {
+        string minuscules = s.ToLower();
+        string majuscules = s.ToUpper();
+        string resultat = majuscules[0] + minuscules[1..];
+        return resultat;
+    }
     public void Afficher()
     {
-        Console.WriteLine(nom + "-" + prix + "€");
+        string IndicationVege = vegetarienne ? " (V) " : ";";
+        string nomAffiche = FormaterNomPizza(nom);
+        Console.WriteLine(nomAffiche + IndicationVege + " - " + prix + "€");
     }
 }
 
