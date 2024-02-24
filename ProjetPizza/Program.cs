@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-var listePizzas = new List<Pizza>()
+var pizzas = new List<Pizza>()
 {
     new Pizza("4 fromages", 11.5f, true, new List<string> { "tomate", "champignons", "oignons", "mozzarella", "cantal", "gorgonzola", "edam" }),
     new Pizza("margherita", 8f, true, new List < string > { "mozzarella", "tomate", "champignons", "oignons", "poivrons" }),
@@ -10,17 +10,40 @@ var listePizzas = new List<Pizza>()
     new Pizza("mexicaine", 13.5f, false, new List < string > { "mozzarella", "tomate", "merguez", "poulet", "épices","champignons", "oignons", })
 };
 
-foreach (var pizza in listePizzas) {
-    pizza.Afficher(); 
+foreach (var pizza in pizzas)
+{
+    pizza.Afficher();
 };
+
+Pizza pizzaPrixMin = null;
+Pizza pizzaPrixMax = null;
+pizzaPrixMin = pizzas[0];
+pizzaPrixMax = pizzas[0];
+
+foreach (var pizza in pizzas)
+{
+    if (pizzaPrixMin.prix > pizza.prix) {
+        pizzaPrixMin = pizza;
+    }
+    if(pizzaPrixMax.prix < pizza.prix)
+    {
+        pizzaPrixMax= pizza;
+    }
+};
+
+
+
+Console.WriteLine("La pizza la moins chère est la pizza " + pizzaPrixMin.nom + ". Elle coûte " + pizzaPrixMin.prix + " €");
+Console.WriteLine("La pizza la plus chère est la pizza " + pizzaPrixMax.nom + ". Elle coûte " + pizzaPrixMax.prix + " €");
+
 
 class Pizza
 {
-    string nom { get; set; }
-    float prix { get; set; }
-    bool vegetarienne {  get; set; }
+    public string nom;
+    public float prix { get; private set; }
+    bool vegetarienne;
 
-    List<string> ingredients { get; set; }
+    List<string> ingredients;
     public Pizza(string nom, float prix, bool vegetarienne, List<string> ingredients)
     {
         this.nom = nom;
@@ -51,6 +74,8 @@ class Pizza
         Console.WriteLine(string.Join(", ", ingredientsAffiches));
         Console.WriteLine();
     }
+
+
 }
 
 
