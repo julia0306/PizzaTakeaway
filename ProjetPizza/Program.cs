@@ -7,7 +7,8 @@ var pizzas = new List<Pizza>()
     new Pizza("margherita", 8f, true, new List < string > { "mozzarella", "tomate", "champignons", "oignons", "poivrons" }),
     new Pizza("indienne", 12.5f, false, new List < string > { "mozzarella", "sauce tomate","curry", "poulet", "champignons", "oignons" }),
     new Pizza("calzone", 11.5f, true, new List < string > { "mozzarella", "tomate", "champignons", "oignons", "cheddar" }),
-    new Pizza("mexicaine", 13.5f, false, new List < string > { "mozzarella", "tomate", "merguez", "poulet", "épices","champignons", "oignons", })
+    new Pizza("mexicaine", 13.5f, false, new List < string > { "mozzarella", "tomate", "merguez", "poulet", "épices","champignons", "oignons", }),
+    new PizzaPersonnalisee()
 };
 
 foreach (var pizza in pizzas)
@@ -15,35 +16,48 @@ foreach (var pizza in pizzas)
     pizza.Afficher();
 };
 
-Pizza pizzaPrixMin = null;
-Pizza pizzaPrixMax = null;
-pizzaPrixMin = pizzas[0];
-pizzaPrixMax = pizzas[0];
 
-foreach (var pizza in pizzas)
+class PizzaPersonnalisee : Pizza
 {
-    if (pizzaPrixMin.prix > pizza.prix) {
-        pizzaPrixMin = pizza;
-    }
-    if(pizzaPrixMax.prix < pizza.prix)
+    static int nbPizzaPersonnalisee = 0;
+
+    public PizzaPersonnalisee() : base("Personnalisee", 5, false, null)
     {
-        pizzaPrixMax= pizza;
+        nbPizzaPersonnalisee++;
+        nom = "Personnalisee" + nbPizzaPersonnalisee;
+
+        ingredients = new List<string>();
+        while (true)
+        {
+            Console.Write("Quels ingrédients désirez-vous sur votre pizza " +nbPizzaPersonnalisee + "? (ENTRER pour terminer)");
+            var ingredient = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(ingredient))
+            {
+                break;
+            }
+            if (ingredients.Contains(ingredient))
+            {
+                Console.WriteLine("Cet ingrédient est déjà présent dans la liste d'ingrédients.");
+            }
+            else {
+                ingredients.Add(ingredient);
+                Console.WriteLine(string.Join(", ", ingredients));
+            }
+            Console.WriteLine();
+        }
+
+        prix = 5 + ingredients.Count * 1.5f;
+
     }
-};
 
-
-
-Console.WriteLine("La pizza la moins chère est la pizza " + pizzaPrixMin.nom + ". Elle coûte " + pizzaPrixMin.prix + " €");
-Console.WriteLine("La pizza la plus chère est la pizza " + pizzaPrixMax.nom + ". Elle coûte " + pizzaPrixMax.prix + " €");
-
-
+}
 class Pizza
 {
-    public string nom;
-    public float prix { get; private set; }
-    bool vegetarienne;
+    protected string nom;
+    public float prix { get; protected set; }
+    public bool vegetarienne { get; private set; }
 
-    List<string> ingredients;
+    public List<string> ingredients { get; protected set; }
     public Pizza(string nom, float prix, bool vegetarienne, List<string> ingredients)
     {
         this.nom = nom;
